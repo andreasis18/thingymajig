@@ -17,5 +17,6 @@ class MainActivity : AppCompatActivity() {
         var q = Volley.newRequestQueue(this)
         val url = "http://penir.jitusolution.com"
         val stringRequest = StringRequest(Request.Method.GET, url, Response.Listener<String>{}, Response.ErrorListener {})
+        
     }
 }
