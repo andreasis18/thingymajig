@@ -32,7 +32,6 @@ class LoginActivity : AppCompatActivity() {
                 if(response!="error"){
                     Generator.loggedUser = uname
 
-                    //pindah halaman ke projectActivity
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }

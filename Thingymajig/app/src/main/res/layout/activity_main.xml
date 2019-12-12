@@ -7,7 +7,6 @@
         android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
 
@@ -27,19 +26,16 @@
                 app:tabMode="scrollable">
 
             <android.support.design.widget.TabItem
-                    android:id="@+id/homeTab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Home" />
 
             <android.support.design.widget.TabItem
-                    android:id="@+id/listTab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Recipe List" />
 
             <android.support.design.widget.TabItem
-                    android:id="@+id/addTab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Add Recipe" />
