@@ -4,31 +4,63 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.ListFragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import android.content.Intent
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [FragFavRecipe.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [FragFavRecipe.newInstance] factory method to
- * create an instance of this fragment.
- */
-class FragFavRecipe : Fragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_frag_fav_recipe, container, false)
+class FragFavRecipe : ListFragment() {
+
+    var recipeName = ArrayList<String>()
+    var recipe = ArrayList<Recipe>()
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, recipeName)
+        listAdapter = arrayAdapter
     }
 
+    companion object{
+        fun newInstance(recipesName:ArrayList<String>, recipes:ArrayList<Recipe>):FragFavRecipe{
+            val fragment = FragFavRecipe()
+            fragment.recipeName = recipesName
+            fragment.recipe = recipes
+            return fragment
+        }
+    }
+
+    override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
+        super.onListItemClick(l, v, position, id)
+
+        val intent = Intent(activity, DetailRecipe::class.java)
+
+        startActivityForResult(intent,1)
+//        val fragmentManager = activity.supportFragmentManager
+//        val transaction = fragmentManager.beginTransaction()
+//
+//        val fragment = FragDetailRecipe()
+//        val bundle = Bundle()
+//        bundle.putString()
+//        fragment.arguments = bundle
+//
+//        with(transaction){
+//            replace( , fragment)
+//            addToBackStack(null)
+//            commit()
+//        }
+    }
 }

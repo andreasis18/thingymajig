@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
@@ -17,6 +18,11 @@ import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
+    var recipes = ArrayList<Recipe>()
+    var recipesName = ArrayList<String>()
+    var recipesFav = ArrayList<Recipe>()
+    var recipesFavName = ArrayList<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -24,28 +30,32 @@ class MainActivity : AppCompatActivity() {
         scrollView.isFillViewport = true
 
         var q = Volley.newRequestQueue(this)
-        val url = Generator.url
+        val url = Generator.url + "getAll.php"
 
         val stringRequest = object: StringRequest(Request.Method.POST, url, Response.Listener<String>{
                 response-> try{
             Log.e("resp", response)
             val jsonObject = JSONObject(response)
-            val jsonArray: JSONArray = jsonObject.getJSONArray("projects")
+            val jsonArray: JSONArray = jsonObject.getJSONArray("recipe")
             for(i in 0 until jsonArray.length()){
-                val jsonProject = jsonArray.getJSONObject(i)
-                projects.add(Project(jsonProject.getInt("id"), jsonProject.getString("project_name"),
-                    jsonProject.getString("leader"), jsonProject.getString("project_status")))
-
-                if(Global.loggedUser == jsonProject.getString("leader")){
-                    projectsLead.add(Project(jsonProject.getInt("id"), jsonProject.getString("project_name"),
-                        jsonProject.getString("leader"), jsonProject.getString("project_status")))
-                }
-                else{
-                    projectsParticipating.add(Project(jsonProject.getInt("id"), jsonProject.getString("project_name"),
-                        jsonProject.getString("leader"), jsonProject.getString("project_status")))
-                }
+                val jsonRecipe = jsonArray.getJSONObject(i)
+                recipes.add(Recipe(jsonRecipe.getInt("id"), jsonRecipe.getString("name"),
+                    jsonRecipe.getString("description"), jsonRecipe.getString("image")))
+                recipesName.add(jsonRecipe.getString("name"))
+            }
+            val jsonArrayFav: JSONArray = jsonObject.getJSONArray("fav")
+            for(i in 0 until jsonArrayFav.length()){
+                val jsonRecipe = jsonArrayFav.getJSONObject(i)
+                recipesFav.add(Recipe(jsonRecipe.getInt("id"), jsonRecipe.getString("name"),
+                    jsonRecipe.getString("description"), jsonRecipe.getString("image")))
+                recipesFavName.add(jsonRecipe.getString("name"))
             }
 
+            val fragmentAdapter = FragmentAdapter(supportFragmentManager)
+            fragmentAdapter.addFragment(FragFavRecipe.newInstance(recipesFavName))
+            fragmentAdapter.addFragment(FragListRecipe.newInstance(recipesName))
+            fragmentAdapter.addFragment(FragAddRecipe())
+            viewPager.adapter = fragmentAdapter
         } catch (e: JSONException){
             Log.e("error",e.message)
         }
@@ -55,17 +65,11 @@ class MainActivity : AppCompatActivity() {
         {
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
-                params.put("username", Generator.loggedUser)
+                params.put("name", Generator.loggedUser)
                 return params
             }
         }
         q.add(stringRequest)
-
-        val fragmentAdapter = FragmentAdapter(supportFragmentManager)
-        fragmentAdapter.addFragment(FragFavRecipe())
-        fragmentAdapter.addFragment(FragListRecipe())
-        fragmentAdapter.addFragment(FragAddRecipe())
-        viewPager.adapter = fragmentAdapter
 
         tabs.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
@@ -81,7 +85,6 @@ class MainActivity : AppCompatActivity() {
                     tab?.select()
                 }
             }
-
         })
     }
 }
