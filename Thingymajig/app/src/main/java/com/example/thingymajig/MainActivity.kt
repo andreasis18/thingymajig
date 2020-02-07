@@ -1,5 +1,7 @@
 package com.example.thingymajig
 
+import android.app.Activity
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -52,8 +54,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             val fragmentAdapter = FragmentAdapter(supportFragmentManager)
-            fragmentAdapter.addFragment(FragFavRecipe.newInstance(recipesFavName))
-            fragmentAdapter.addFragment(FragListRecipe.newInstance(recipesName))
+            fragmentAdapter.addFragment(FragFavRecipe.newInstance(recipesFavName, recipesFav))
+            fragmentAdapter.addFragment(FragListRecipe.newInstance(recipesName, recipes))
             fragmentAdapter.addFragment(FragAddRecipe())
             viewPager.adapter = fragmentAdapter
         } catch (e: JSONException){
@@ -86,5 +88,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+
+    override fun onActivityResult(requestCode:Int, ResultCode:Int, data: Intent?){
+        if(requestCode == 1){
+            if(ResultCode== Activity.RESULT_OK){
+                finish();
+                startActivity(intent);
+            }
+        }
     }
 }

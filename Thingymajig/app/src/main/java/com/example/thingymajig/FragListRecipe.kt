@@ -1,6 +1,7 @@
 package com.example.thingymajig
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -23,14 +24,16 @@ import org.json.JSONObject
 class FragListRecipe : ListFragment() {
 
     var recipeName: ArrayList<String>? = null
+    var recipe: ArrayList<Recipe> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
     companion object{
-        fun newInstance(recipes:ArrayList<String>):FragListRecipe{
+        fun newInstance(recipesName:ArrayList<String>, recipes:ArrayList<Recipe>):FragListRecipe{
             val fragment = FragListRecipe()
-            fragment.recipeName = recipes
+            fragment.recipeName = recipesName
+            fragment.recipe = recipes
             return fragment
         }
     }
@@ -44,5 +47,12 @@ class FragListRecipe : ListFragment() {
 
     override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
         super.onListItemClick(l, v, position, id)
+
+        val intent = Intent(activity, DetailActivity::class.java)
+        intent.putExtra("recipeId", recipe[position].Id)
+        intent.putExtra("recipeName", recipe[position].name)
+        intent.putExtra("recipeDescription", recipe[position].description)
+        intent.putExtra("recipeImage", recipe[position].image)
+        startActivityForResult(intent,1)
     }
 }

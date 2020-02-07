@@ -46,8 +46,11 @@ class FragFavRecipe : ListFragment() {
     override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
         super.onListItemClick(l, v, position, id)
 
-        val intent = Intent(activity, DetailRecipe::class.java)
-
+        val intent = Intent(activity, DetailActivity::class.java)
+        intent.putExtra("recipeId", recipe.get(position).Id)
+        intent.putExtra("recipeName", recipe[position].name)
+        intent.putExtra("recipeDescription", recipe[position].description)
+        intent.putExtra("recipeImage", recipe[position].image)
         startActivityForResult(intent,1)
 //        val fragmentManager = activity.supportFragmentManager
 //        val transaction = fragmentManager.beginTransaction()
